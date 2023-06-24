@@ -11,11 +11,11 @@
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <MenuItems class="absolute top-14 bg-white shadow-lg p-4 border rounded-xl flex flex-col">
+      <MenuItems class="absolute top-14 bg-white dark:bg-neutral-800 shadow-lg p-4 border dark:border-0 rounded-xl flex flex-col">
         <MenuItem v-slot="{ active }">
-            <div class="flex items-center w-full py-2 px-3 rounded-lg cursor-pointer" :class="{ 'bg-blue-100': active }">
+            <div class="flex items-center w-full py-2 px-5 rounded-lg cursor-pointer dark:text-neutral-200" :class="{ 'bg-green-100 dark:bg-neutral-700': active }">
                 <span class="i-heroicons-arrow-left-on-rectangle-solid mr-2"></span>
-                <a class="text-sm" href="/account-settings">
+                <a class="text-sm " href="/account-settings">
                     Log Out
                 </a>
             </div>
