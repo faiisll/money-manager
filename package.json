@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@egoist/tailwindcss-icons": "^1.1.0",
-    "vue": "^3.2.47"
+    "@headlessui/vue": "^1.7.14",
+    "@vueuse/core": "^10.2.0",
+    "chart.js": "^3.9.1",
+    "vue": "^3.2.47",
+    "vue-chart-3": "^3.1.8"
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.1.11",
