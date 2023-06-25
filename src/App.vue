@@ -1,28 +1,50 @@
 
 
 <template>
-  <div id="parent-all" class="flex font-raleway">
-    <Sidebar />
-    <Body />
+  <div id="parent-all" class="font-raleway dark:bg-neutral-900">
+    <Toast v-for="variant in toastVariant" :variant="variant" :key="variant" />
+    <router-view v-slot="{ Component }">
+      <!-- Use any custom transition and  to `fade` -->
+      <transition name="fade" mode="out-in">
+          <component :is="Component" />
+      </transition>
+    </router-view>
     
   </div>
 </template>
 <script>
-import Sidebar from './components/Sidebar/index.vue'
-import Body from './components/Body/index.vue'
-
+import { mapStores } from 'pinia'
+import { useAuthStore } from '@/store';
+import Toast from "@/components/Toast/index.vue"
 export default {
   components: {
-    Sidebar,
-    Body
+    Toast
+  },
+  computed: {
+    ...mapStores(useAuthStore)
+  },
+  data: () => ({
+    toastVariant: ['default', 'success', 'danger']
+  }),
+  created(){
+    this.authStore.checkLocalAuth()
   }
 
 }
 </script>
 <style scoped>
 #parent-all{
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
+}
+
+.fade-enter-active,
+.fade-leave-active{
+    transition: 300ms ease all;
+}
+.fade-enter-from,
+.fade-leave-to{
+    opacity: 0;
 }
 
 </style>
