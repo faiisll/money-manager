@@ -1,26 +1,32 @@
 <template>
-    <div
-    class="flex bg-neutral-100 dark:bg-neutral-700 px-3 py-2 rounded-lg w-full items-center relative"
-    :class="{
-        ['border border-red-600 dark:border-red-500'] : state === 'danger',
-        ['border border-green-600']: state === 'success'
-    }">
-        <div @click="clickOutside" class="w-full h-full absolute z-0 cursor-text"></div>
-        <div v-if="prefixIcon" class="p-2 bg-white dark:bg-neutral-300 rounded-lg shrink-0 z-10">
-            <span class="flex text-emerald-600" :class="{[prefixIcon] : Boolean(prefixIcon)}"></span>
+    <div class="w-full flex flex-col gap-1 flex-1">
+        <div
+        class="flex bg-neutral-100 dark:bg-neutral-700 px-3 py-2 rounded-lg w-full items-center relative"
+        :class="{
+            ['border border-red-600 dark:border-red-500'] : state === 'danger',
+            ['border border-green-600']: state === 'success'
+        }">
+            <div @click="clickOutside" class="w-full h-full absolute z-0 cursor-text"></div>
+            <div v-if="prefixIcon" class="p-2 bg-white dark:bg-neutral-300 rounded-lg shrink-0 z-10">
+                <span class="flex text-emerald-600" :class="{[prefixIcon] : Boolean(prefixIcon)}"></span>
+            </div>
+            <div class="grow px-2 z-10">
+                <Field v-model="input" :rules="rules" @input="$emit('update:modelValue', $event.target.value)" :name="name" v-slot="{ field }">
+                    <input
+                    ref="mainInput"
+                    :type="type"
+                    v-bind="field"
+                    :placeholder="placeholder"
+                    class="w-full text-neutral-700 dark:text-neutral-200 bg-transparent focus:outline-none text-sm" />
+                </Field>
+            </div>
+            <div v-if="suffixIcon" role="button" class="p-2 shrink-0 z-10" @click="handleClickSuffix">
+                <span class="flex text-emerald-600" :class="{[suffixIcon]: Boolean(suffixIcon)}"></span>
+            </div>
         </div>
-        <div class="grow px-2 z-10">
-            <Field v-model="input" :rules="rules" @input="$emit('update:modelValue', $event.target.value)" :name="name" v-slot="{ field }">
-                <input
-                ref="mainInput"
-                :type="type"
-                v-bind="field"
-                :placeholder="placeholder"
-                class="w-full text-neutral-700 dark:text-neutral-200 bg-transparent focus:outline-none text-sm" />
-            </Field>
-        </div>
-        <div v-if="suffixIcon" role="button" class="p-2 shrink-0 z-10" @click="handleClickSuffix">
-            <span class="flex text-emerald-600" :class="{[suffixIcon]: Boolean(suffixIcon)}"></span>
+        <div v-if="errors[name]" class="flex gap-1 text-sm text-red-600 dark:text-red-400 items-center">
+            <span class="i-heroicons-information-circle"></span>
+            <small>{{ errors[name] }}</small>
         </div>
     </div>
 </template>
@@ -29,12 +35,21 @@
 import { ref } from 'vue';
 import { Field } from 'vee-validate';
 import { defineRule } from 'vee-validate';
+import _ from "lodash"
 
 defineRule('required', value => {
   if (!value || !value.length) {
     return 'This field is required';
   }
 
+  return true;
+});
+
+defineRule('numeric', value => {
+  if (isNaN(value)) {
+    return 'This field must be 0-9';
+  }
+  
   return true;
 });
 
@@ -73,8 +88,8 @@ export default {
             default: "text"
         },
         errors: {
-            type: Array,
-            default: () => ([])
+            type: Object,
+            default: () => ({})
         },
         state : {
             type: String,
@@ -97,7 +112,18 @@ export default {
             input.focus()
             // console.log(input);
 
+        },
+        init(){
+            let initData = _.cloneDeep(this.$attrs.modelValue)
+            this.input = initData
+            
         }
+    },
+    created(){
+        this.$nextTick(() => {
+            this.init()
+        })
+        
     }
 
 }

@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="w-full pt-2">
-            <h3 class="text-xl font-semibold dark:text-neutral-300">Rp 6.700.000</h3>
+            <h3 class="text-xl font-semibold dark:text-neutral-300">IDR 6.700.000</h3>
             <h4 class="pb-4 pt-2 text-xs" :class="`${color}`">78% then last month</h4>
         </div>
 
@@ -40,5 +40,7 @@ export default {
 </script>
 
 <style>
+
+
 
 </style>

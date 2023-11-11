@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-full py-28 flex justify-center items-center">
-        <div class="w-1/3 py-2 px-40 bg-white shadow-md rounded-xl dark:bg-neutral-800 border border-emerald-200 dark:border-emerald-800">
+        <div class="lg:w-2/3 lg:max-w-xl md:w-4/5 sm:w-full md:max-w-lg sm:max-w-md py-2 lg:px-10 md:px-10 px-10 bg-white shadow-md rounded-xl dark:bg-neutral-800 border border-emerald-200 dark:border-emerald-800">
             <div class="pt-20">
                 <h1 class="font-semibold text-lg mb-2 dark:text-neutral-100">Sign up for free!</h1>
                 <small class="text-neutral-500">Start managing your finance faster & better.</small>
@@ -21,6 +21,22 @@
                         <div v-if="errors.email" class="flex gap-1 text-sm text-red-600 dark:text-red-400 items-center">
                             <span class="i-heroicons-information-circle"></span>
                             <small>{{ errors['email'] }}</small>
+                        </div>
+                    </div>
+                    <div class="w-full flex flex-col gap-1">
+                        <Input
+                            rules="required"
+                            prefixIcon="i-heroicons-user-circle"
+                            placeholder="Type your name here"
+                            type="text"
+                            v-model="regisForm.name"
+                            name="name"
+                            :state="errors.name ? 'danger' : 'default'"
+                        />
+                        
+                        <div v-if="errors.name" class="flex gap-1 text-sm text-red-600 dark:text-red-400 items-center">
+                            <span class="i-heroicons-information-circle"></span>
+                            <small>{{ errors['name'] }}</small>
                         </div>
                     </div>
                     <div class="w-full flex flex-col gap-1">
@@ -81,6 +97,8 @@ import Button from "../../components/Button/index.vue"
 import { Form} from 'vee-validate';
 import { mapActions, mapStores } from 'pinia'
 import { useAuthStore } from '@/store';
+import { notify } from 'notiwind'
+import { handlingError } from '@/helpers/response';
 export default {
     components: {
         Input,
@@ -94,7 +112,8 @@ export default {
         regisForm: {
             email: "",
             password: "",
-            confirmPassword: ""
+            confirmPassword: "",
+            name: ""
         }
     }),
     computed: {
@@ -108,7 +127,31 @@ export default {
         handleRegister(){
             this.authStore.register(this.regisForm)
             .then(() => {
+                this.$router.push("/auth")
+                notify({
+                    group: "success",
+                    title: "Success",
+                    text: "You're successfully registered."
+                }, 5000)
                 this.$router.push("/")
+            }).catch(err => {
+                console.log(err.response);
+                if(err.response.data){
+                    notify({
+                        group: "danger",
+                        title: "Failed",
+                        text: handlingError(err.response.data)
+                    }, 5000)
+                    
+                }else{
+                    notify({
+                        group: "danger",
+                        title: "Failed",
+                        text: err.message ? err.message : "Something whent wrong!"
+                    }, 5000)
+
+                }
+
             })
         }
     },

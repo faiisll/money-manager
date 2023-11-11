@@ -1,12 +1,15 @@
 <template>
     <div class="w-full h-full py-28 flex justify-center items-center">
-        <div class="w-1/3 py-2 px-40 bg-white shadow-md rounded-xl dark:bg-neutral-800 border border-emerald-200 dark:border-emerald-800">
+        <div class="lg:w-2/3 lg:max-w-xl md:w-4/5 sm:w-full md:max-w-lg sm:max-w-md py-2 lg:px-20 md:px-10 px-10 bg-white shadow-md rounded-xl dark:bg-neutral-800 border border-emerald-200 dark:border-emerald-800">
             <div class="pt-20">
                 <h1 class="font-semibold text-lg mb-2 dark:text-neutral-100">Welcome Back!</h1>
                 <small class="text-neutral-500">Start managing your finance faster & better.</small>
             </div>
             <Form @submit="login" v-slot="{ values, errors }">
-                <div class="w-full flex flex-col pt-10 gap-3 pb-20">
+                <div class="w-full h-48 flex" v-if="authStore.loading">
+                    <Spinner />
+                </div>
+                <div v-show="!authStore.loading" class="w-full flex flex-col pt-10 gap-3 pb-20">
                     <div class="w-full flex flex-col gap-1">
                         <Input
                             name="email"
@@ -51,9 +54,6 @@
                         <span class="text-neutral-400">Don't you have an account ? <span @click="moveRegister()" role="button" class="text-emerald-700">Sign Up</span></span>
                     </div>
                     
-
-
-
                 </div>
             </Form>
       
@@ -67,13 +67,16 @@ import { notify } from 'notiwind'
 import { Form, Field } from 'vee-validate';
 import Input from '../../components/Input/index.vue';
 import Button from "../../components/Button/index.vue"
+import Spinner from "@/components/Spinner/index.vue"
 import { mapActions, mapStores } from 'pinia'
 import { useAuthStore } from '@/store';
+import { handlingError } from '@/helpers/response';
 export default {
     components: {
         Input,
         Button,
-        Form
+        Form,
+        Spinner
     },
     data: () => ({
         showPassword: false,
@@ -100,11 +103,10 @@ export default {
                 }, 5000)
                 this.$router.push("/")
             }).catch(err => {
-                console.log(err.message);
                 notify({
                     group: "danger",
                     title: "Failed",
-                    text: err.message ? err.message : "Something whent wrong!"
+                    text: err.data ? handlingError(err.data) : "Something whent wrong!"
                 }, 5000)
             })
         }

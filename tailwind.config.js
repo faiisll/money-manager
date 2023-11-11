@@ -8,7 +8,7 @@ export default {
   ],
   theme: {
     fontFamily:{
-      raleway: 'Raleway, Arial, sans-serif'
+      raleway: 'Nunito Sans, Arial, sans-serif'
 
     },
     extend: {},

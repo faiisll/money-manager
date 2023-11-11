@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from '../firebase';
 import { getDataLS, setDataLS } from '../helpers/localStorage';
+import { logout, getUser } from '@/api';
+import { login, register } from '@/api/auth';
 
 
 export const useAuthStore = defineStore('auth', {
@@ -17,9 +18,30 @@ export const useAuthStore = defineStore('auth', {
             this.loading = false
             localStorage.removeItem('user')
         },
+        updateUser(){
+            this.loading = true
+            return new Promise((resolve, reject) => {
+                getUser().then(res => {
+                    if(res.data){
+                        if(res.data){
+                            this.user = res.data
+                            setDataLS('user', res.data)
+                        }
+                    }
+                    resolve(res)
+                }).catch(err => {
+                    reject(err)
+                }).finally(() =>{
+                    this.loading = false
+
+                })
+            })
+
+        },
         checkLocalAuth(){
             let local = getDataLS('user')
-            if(!local) {
+            let token = getDataLS('token')
+            if(!token) {
                 this.reset()
                 return false
             }else{
@@ -30,16 +52,12 @@ export const useAuthStore = defineStore('auth', {
 
 
         },
-        register({email, password}){
+        register({email, password, name}){
             this.loading = true
             return new Promise((resolve, reject) => {
-                createUserWithEmailAndPassword(auth, email, password)
+                register({email, password, name})
                 .then((userCredential) => {
-                    const user = userCredential.user
-                    this.user = user
-                    setDataLS('user', user)
-                    this.isLogged = true
-                    resolve(user)
+                    resolve(userCredential)
                 }).catch(err => {
                     reject(err)
                 }).finally(() => {
@@ -50,14 +68,16 @@ export const useAuthStore = defineStore('auth', {
         login({email, password}){
             this.loading = true
             return new Promise((resolve, reject) => {
-                signInWithEmailAndPassword(auth, email, password)
+                login({email, password})
                 .then((userCredential) => {
-                    console.log(userCredential);
-                    const user = userCredential.user
-                    this.user = user
-                    setDataLS('user', user)
-                    this.isLogged = true
-                    resolve(user)
+                    if(userCredential.data){
+                        const {user, access_token} = userCredential.data
+                        this.user = user
+                        setDataLS('user', user)
+                        setDataLS('token', access_token)
+                        this.isLogged = true
+                        resolve(userCredential.data)
+                    }else resolve(userCredential)
 
                 }).catch((err) => {
                     reject(err)
@@ -72,9 +92,10 @@ export const useAuthStore = defineStore('auth', {
         logout(){
             this.loading = true
             return new Promise((resolve, reject) => {
-                signOut(auth).then(res => {
+                logout().then(res => {
                     resolve(true)
                     this.reset()
+                    localStorage.removeItem('token')
                 }).catch((err) => {
                     reject(err)
     

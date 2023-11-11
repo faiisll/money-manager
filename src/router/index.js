@@ -1,11 +1,13 @@
 import UserLayout from "../pages/layout/UserLayout.vue"
 import GuestLayout from "../pages/layout/GuestLayout.vue"
 import Dashboard from "../pages/Dashboard/index.vue"
-import {createRouter, createWebHistory} from "vue-router"
+import {createRouter, createWebHashHistory} from "vue-router"
 import Transaction from "../pages/Transaction/index.vue"
 import routerGuard from "./routerGuard"
 import Login from "@/pages/Login/index.vue"
 import Register from "@/pages/Login/Register.vue"
+import Wallet from "@/pages/wallet/index.vue"
+import Category from "@/pages/Category/index.vue"
 
 const routes = [
     {
@@ -14,13 +16,13 @@ const routes = [
         children: [
             {
                 path: "",
-                component: Login,
+                component: () => import("@/pages/Login/index.vue"),
                 name: "Login",
                 meta: { requiresAuth: false },
             },
             {
                 path: "register",
-                component: Register,
+                component: () => import("@/pages/Login/Register.vue"),
                 name: "Register",
                 meta: { requiresAuth: false },
             },
@@ -37,28 +39,28 @@ const routes = [
         children: [
             {
                 path: "",
-                component: Dashboard,
+                component: () => import("@/pages/Dashboard/index.vue"),
                 name: "Dashboard",
                 meta: { requiresAuth: true },
             },
             {
                 path: "transaction",
-                component: Transaction,
+                component: () => import("@/pages/Transaction/index.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "wallet",
-                component: Transaction,
+                component: () => import("@/pages/Wallet/index.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "categories",
-                component: Transaction,
+                component: () => import("@/pages/Category/index.vue"),
                 meta: { requiresAuth: true },
             },
             {
                 path: "setting",
-                component: Transaction,
+                component: () => import("@/pages/Setting/index.vue"),
                 meta: { requiresAuth: true },
             },
 
@@ -70,7 +72,7 @@ const routes = [
 
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes,
     scrollBehavior(to, from, savedPosition) {
         // always scroll to top

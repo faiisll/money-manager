@@ -1,6 +1,6 @@
 
 <template>
-  <div class="w-1/6 h-full px-6 py-6 flex flex-col border-r border-gray-200 dark:bg-neutral-900 dark:border-r-neutral-800">
+  <div class="h-full sm:w-full sm:h-full px-6 py-6 flex flex-col border-r border-gray-200 bg-white dark:bg-neutral-900 dark:border-r-neutral-800">
     <SidebarHeader />
     <SidebarMenus />
   </div>

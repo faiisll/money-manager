@@ -1,7 +1,7 @@
 <template>
     <Card color="bg-white" customClass="border border-gray-200 dark:bg-neutral-800 dark:border-0">
         <div class="w-full flex justify-between mb-4">
-            <h2 class="text-sm font-semibold dark:text-slate-100">Recent Transactions</h2>
+            <h2 class="text-sm font-semibold dark:text-slate-100">{{ title }}</h2>
             <span class="i-heroicons-ellipsis-horizontal-solid text-2xl text-gray-600 dark:text-gray-200 p-2" role="button"></span>
         </div>
 
@@ -24,6 +24,12 @@
 import Card from "./index.vue"
 import RecentTransactionItem from "../RecentTransactionItem/index.vue"
 export default {
+    props: {
+        title: {
+            type: String,
+            default: "Recent Transactions"
+        }
+    },
     components: {
         Card,
         RecentTransactionItem

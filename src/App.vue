@@ -32,7 +32,7 @@ export default {
 
 }
 </script>
-<style scoped>
+<style>
 #parent-all{
   min-height: 100vh;
   width: 100vw;

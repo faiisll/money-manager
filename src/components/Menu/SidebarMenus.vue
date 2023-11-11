@@ -4,7 +4,7 @@
         Main Menu
     </h3>
 
-    <SidebarMenusItem v-for="item in sidebarStore.sidebars" :key="item.id" :url="item.url" :name="item.name" :icon="item.icon" />
+    <SidebarMenusItem v-for="item in sidebarStore.sidebars" :key="item.id" :url="item.url" :active="item.url === currentRoute" :name="item.name" :icon="item.icon" />
   </div>
 </template>
 
@@ -12,16 +12,27 @@
 import SidebarMenusItem from './SidebarMenusItem.vue';
 import {mapStores} from "pinia"
 import {useSidebarStore} from "@/store"
+import { useRouter} from 'vue-router'
 export default {
     components: {
         SidebarMenusItem
+    },
+    setup(){
+        const router = useRouter
+        return {
+            router,
+        }
+
     },
     data: () => ({
         links: [
         ]
     }),
     computed: {
-        ...mapStores(useSidebarStore)
+        ...mapStores(useSidebarStore),
+        currentRoute(){
+            return this.router().currentRoute.value.path
+        }
     }
 
 }

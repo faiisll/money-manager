@@ -11,11 +11,11 @@
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <MenuItems class="absolute top-14 bg-white dark:bg-neutral-800 shadow-lg p-4 border dark:border-0 rounded-xl flex flex-col" :static="authStore.loading">
+      <MenuItems class="absolute z-40 top-14 right-5 bg-white dark:bg-neutral-800 shadow-lg p-4 border dark:border-0 rounded-xl flex flex-col" :static="authStore.loading">
         <MenuItem v-slot="{ active}" disabled>
-            <div  class="flex items-center w-full py-2 px-5 rounded-lg dark:text-neutral-200" :class="{ 'bg-green-100 dark:bg-neutral-700': active }">
-                <span class="text-sm">{{ authStore.user.email ? authStore.user.email : "" }}</span>
-            </div>
+          <div  class="flex items-center w-full py-2 px-5 rounded-lg dark:text-neutral-200" :class="{ 'bg-green-100 dark:bg-neutral-700': active }">
+              <span class="text-sm">{{ authStore.user.email ? authStore.user.email : "" }}</span>
+          </div>
         </MenuItem>
         <MenuItem v-slot="{ active}">
             <div  @click="logout()" class="flex items-center w-full py-2 px-5 rounded-lg cursor-pointer dark:text-neutral-200" :class="{ 'bg-green-100 dark:bg-neutral-700': active }">

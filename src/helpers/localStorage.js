@@ -9,3 +9,9 @@ export const getDataLS = (key) => {
     if(local) return JSON.parse(local)
     else return false
 }
+
+export const forceLogout = () => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    window.location.href = "/auth";
+}
